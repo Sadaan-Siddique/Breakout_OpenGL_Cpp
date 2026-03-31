@@ -20,19 +20,19 @@ enum GameState {
 
 class Game { 
     public: 
-    // game state
-    GameState m_state;
-    bool m_keys[1024];
-    unsigned int m_width, m_height;
-    // constructor/destructor
-    Game(unsigned int width, unsigned int height);
-    ~Game();
-    // initialize game state (load all shaders/textures/levels)
-    void init();
-    // game loop
-    void processInput(float dt);
-    void update(float dt);
-    void render();
+        // game state
+        GameState m_state;
+        bool m_keys[1024];
+        unsigned int m_width, m_height;
+        // constructor/destructor
+        Game(unsigned int width, unsigned int height);
+        ~Game();
+        // initialize game state (load all shaders/textures/levels)
+        void Init();
+        // game loop
+        void ProcessInput(float dt);
+        void Update(float dt);
+        void Render();
 
 };
 

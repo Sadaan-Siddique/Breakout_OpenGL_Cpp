@@ -2,8 +2,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "global_variables.h"
+#include "game.h"
 #include <iostream>
 using std::cout, std::endl;
+
+Game Breakout(800, 800);
 
 void processInput(GLFWwindow *window)
 {
@@ -59,17 +62,31 @@ void windowInitialize()
 
 void mainRenderingLoop()
 {
+    Breakout.Init(); // Initialize the game 
+
+    // Variables for smooth movement
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f;
+
     while(!glfwWindowShouldClose(g_window))
     {
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         processInput(g_window);
+        Breakout.ProcessInput(deltaTime);
+
+        Breakout.Update(deltaTime); // Update Game State
         
         // Pre Draw
         // glDisable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);
-        glClearColor(1.f, 1.f, 0.f, 1.f);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glEnable(GL_DEPTH_TEST);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT); // Without this, Framebuffer may behave weirdly.
 
+        Breakout.Render(); // Render the actual game
         
         glfwSwapBuffers(g_window);
         glfwPollEvents();
