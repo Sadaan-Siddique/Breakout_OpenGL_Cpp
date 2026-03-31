@@ -1,0 +1,7 @@
+# Ignoring an entire folder (Use a trailing slash)
+build/
+# Ignore every single PDF file in the project
+*.pdf
+# Ignore every single Markdown file
+*.md
+*.exe
