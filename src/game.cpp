@@ -26,28 +26,23 @@ void Game::Init()
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
     // set render-specific controls
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
+    
     // load textures
-    ResourceManager::LoadTexture("../images/awesomeface.jpeg", false, "face"); // for .jpeg
+    ResourceManager::LoadTexture("../images/background.jpg", false, "background");
+    // ResourceManager::LoadTexture("textures/awesomeface.png", true, "face");
     // ResourceManager::LoadTexture("../images/awesomeface(2).png", true, "face"); // for .png
-
-    // load textures
-    ResourceManager::LoadTexture("textures/background.jpg",
-                                 false, "background");
-    ResourceManager::LoadTexture("textures/awesomeface.png",
-                                 true, "face");
-    ResourceManager::LoadTexture("textures/block.png",
-                                 false, "block");
-    ResourceManager::LoadTexture("textures/block_solid.png",
-                                 false, "block_solid");
+    ResourceManager::LoadTexture("../images/awesomeface.jpeg", false, "face"); // for .jpeg
+    ResourceManager::LoadTexture("../images/block.png", false, "block");
+    ResourceManager::LoadTexture("../images/block_solid.png", false, "block_solid");
     // load levels
     GameLevel one;
-    one.Load("levels/one.lvl", m_width, m_height / 2);
+    one.Load("../src/levels/one.lvl", m_width, m_height / 2);
     GameLevel two;
-    two.Load("levels/two.lvl", m_width, m_height / 2);
+    two.Load("../src/levels/two.lvl", m_width, m_height / 2);
     GameLevel three;
-    three.Load("levels/three.lvl", m_width, m_height / 2);
+    three.Load("../src/levels/three.lvl", m_width, m_height / 2);
     GameLevel four;
-    four.Load("levels/four.lvl", m_width, m_height / 2);
+    four.Load("../src/levels/four.lvl", m_width, m_height / 2);
     Levels.push_back(one);
     Levels.push_back(two);
     Levels.push_back(three);

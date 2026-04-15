@@ -1,3 +1,4 @@
+#include <iostream>
 #include "game_level.hpp"
 
 #include <fstream>
@@ -9,10 +10,10 @@ void GameLevel::Load(const char *file, unsigned int levelWidth, unsigned int lev
     this->Bricks.clear();
     // load from file
     unsigned int tileCode;
-    GameLevel level;
     std::string line;
     std::ifstream fstream(file);
     std::vector<std::vector<unsigned int>> tileData;
+    
     if (fstream)
     {
         while (std::getline(fstream, line)) // read each line from level file
@@ -21,10 +22,28 @@ void GameLevel::Load(const char *file, unsigned int levelWidth, unsigned int lev
             std::vector<unsigned int> row;
             while (sstream >> tileCode) // read each word separated by spaces
                 row.push_back(tileCode);
-            tileData.push_back(row);
+            
+            // Prevent pushing completely empty rows
+            if (row.size() > 0) {
+                tileData.push_back(row);
+            }
         }
+        
         if (tileData.size() > 0)
+        {
+            std::cout << "SUCCESS: Loaded " << tileData.size() << " rows from " << file << std::endl;
             this->init(tileData, levelWidth, levelHeight);
+        }
+        else
+        {
+            // The file was found, but no numbers could be read!
+            std::cout << "WARNING: File found, but no tile data was read: " << file << std::endl;
+        }
+    }
+    else 
+    {
+        // The file path is incorrect and fstream couldn't open it.
+        std::cout << "ERROR: Failed to open level file: " << file << std::endl;
     }
 }
 

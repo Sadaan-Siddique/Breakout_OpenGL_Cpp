@@ -80,11 +80,16 @@ void mainRenderingLoop()
         Breakout.Update(deltaTime); // Update Game State
         
         // Pre Draw
-        // glDisable(GL_DEPTH_TEST);
+        glDisable(GL_DEPTH_TEST); // 1. Turn OFF depth testing for 2D
         glDisable(GL_CULL_FACE);
+        
+        glEnable(GL_BLEND);       // 2. Turn ON blending for transparent PNGs
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glEnable(GL_DEPTH_TEST);
-        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT); // Without this, Framebuffer may behave weirdly.
+        
+        // 3. Only clear the COLOR buffer now, we don't care about depth anymore
+        glClear(GL_COLOR_BUFFER_BIT);
 
         Breakout.Render(); // Render the actual game
         
