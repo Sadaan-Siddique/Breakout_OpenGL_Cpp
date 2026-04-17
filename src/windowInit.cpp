@@ -8,16 +8,25 @@ using std::cout, std::endl;
 
 Game Breakout(800, 800);
 
-void processInput(GLFWwindow *window)
+// 1. REPLACED old processInput with the proper GLFW callback
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    // Close window on Escape
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    // Update the Game's input array when keys are pressed or released
+    if (key >= 0 && key < 1024)
+    {
+        if (action == GLFW_PRESS)
+            Breakout.m_keys[key] = true;
+        else if (action == GLFW_RELEASE)
+            Breakout.m_keys[key] = false;
+    }
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
-    // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
 
@@ -31,7 +40,6 @@ void GetOpenGLVersionInfo()
 
 void windowInitialize()
 {
-    // Initialize Program
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -46,17 +54,18 @@ void windowInitialize()
     {
         cout << "Failed to create GLFW Window." << endl;
         glfwTerminate();
-        // return -1;  
-        exit(-1); // Instantly kills the program
+        exit(-1);
     }
 
     glfwMakeContextCurrent(g_window);
     glfwSetFramebufferSizeCallback(g_window, framebuffer_size_callback);
+    
+    // 2. REGISTER THE CALLBACK HERE (Right after the framebuffer callback)
+    glfwSetKeyCallback(g_window, key_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        // return -1;
-        exit(-1); // Instantly kills the program
+        exit(-1);
     }
 }
 
@@ -64,7 +73,6 @@ void mainRenderingLoop()
 {
     Breakout.Init(); // Initialize the game 
 
-    // Variables for smooth movement
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 
@@ -74,24 +82,22 @@ void mainRenderingLoop()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        processInput(g_window);
-        Breakout.ProcessInput(deltaTime);
-
-        Breakout.Update(deltaTime); // Update Game State
+        // 3. REMOVED the old processInput(g_window) call here. 
+        // The callback handles it automatically in the background now!
         
-        // Pre Draw
-        glDisable(GL_DEPTH_TEST); // 1. Turn OFF depth testing for 2D
+        Breakout.ProcessInput(deltaTime);
+        Breakout.Update(deltaTime); 
+        
+        glDisable(GL_DEPTH_TEST); 
         glDisable(GL_CULL_FACE);
         
-        glEnable(GL_BLEND);       // 2. Turn ON blending for transparent PNGs
+        glEnable(GL_BLEND);       
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        
-        // 3. Only clear the COLOR buffer now, we don't care about depth anymore
         glClear(GL_COLOR_BUFFER_BIT);
 
-        Breakout.Render(); // Render the actual game
+        Breakout.Render(); 
         
         glfwSwapBuffers(g_window);
         glfwPollEvents();
