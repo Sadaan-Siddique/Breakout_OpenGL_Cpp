@@ -1,6 +1,9 @@
 #ifndef GAME_H // GAME_H isn't variable, doesn't store  data, doesn't exist at run time
 #define GAME_H
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "game_level.hpp"
 // are header guards, used to prevent multiple inclusion of the same header file.
 // When the preprocessor sees:
@@ -20,6 +23,11 @@ enum GameState
     GAME_MENU,
     GAME_WIN
 };
+
+//Initialize size of the player paddle
+const glm::vec2 PLAYER_SIZE(150.0f, 40.0f);
+// Initialize velcoity of the player paddle
+const float PLAYER_VELOCITY(500.0f);
 
 class Game
 {
