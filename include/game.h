@@ -66,6 +66,9 @@ public:
     // reset
     void ResetLevel();
     void ResetPlayer();
+
+    unsigned int Lives; 
+    unsigned int Score;
 };
 
 #endif

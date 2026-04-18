@@ -14,7 +14,7 @@ BallObject *Ball;
 ParticleGenerator *Particles;
 
 Game::Game(unsigned int width, unsigned int height)
-    : m_state(GAME_ACTIVE), m_keys(), m_width(width), m_height(height) {}
+    : m_state(GAME_ACTIVE), m_keys(), m_width(width), m_height(height), Lives(4), Score(0) {}
 
 Game::~Game()
 {
@@ -32,11 +32,11 @@ void Game::Init()
     // configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->m_width),
                                       static_cast<float>(this->m_height), 0.0f, -1.0f, 1.0f);
-                                      
+
     // Configure Sprite Shader
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
-    
+
     // Configure Particle Shader (YOU WERE MISSING THIS!)
     ResourceManager::GetShader("particle").Use().SetInteger("sprite", 0);
     ResourceManager::GetShader("particle").SetMatrix4("projection", projection);
@@ -86,14 +86,42 @@ void Game::Update(float dt)
     Ball->Move(dt, this->m_width);
     // check for collisions
     this->DoCollisions();
-    // check loss condition
-    if (Ball->Position.y >= this->m_height) // did ball reach bottom edge?
-    {
-        this->ResetLevel();
-        this->ResetPlayer();
-    }
     // update particles
     Particles->Update(dt, *Ball, 2, glm::vec2(Ball->Radius / 2.0f));
+
+    // --- 1. CHECK LOSS CONDITION (LIVES) ---
+    if (Ball->Position.y >= this->m_height) // did ball reach bottom edge?
+    {
+        --this->Lives;
+        std::cout << "Life Lost! Lives remaining: " << this->Lives << std::endl;
+
+        // Player is dead
+        if (this->Lives == 0)
+        {
+            std::cout << "GAME OVER!" << std::endl;
+            exit(-1);
+        }
+        this->ResetPlayer(); // Always reset paddle and ball position
+    }
+
+    // --- 2. CHECK WIN CONDITION (LEVEL PROGRESSION) ---
+    if (this->m_state == GAME_ACTIVE && this->Levels[this->Level].IsCompleted())
+    {
+        this->ResetPlayer(); // Put paddle/ball back in center
+        this->Level++;       // Move to next level
+
+        std::cout << "Level " << this->Level << " Completed!" << std::endl;
+
+        // If we beat level 4 (index 3)
+        if (this->Level >= 4)
+        {
+            this->m_state = GAME_WIN;
+            this->Score = 1000; // Award points!
+            std::cout << "===========================" << std::endl;
+            std::cout << "YOU WIN! Final Score: " << this->Score << std::endl;
+            std::cout << "===========================" << std::endl;
+        }
+    }
 }
 
 void Game::ProcessInput(float dt)
