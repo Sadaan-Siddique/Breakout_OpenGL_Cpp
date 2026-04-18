@@ -46,8 +46,8 @@ void Game::Init()
     // load textures
     ResourceManager::LoadTexture("../images/background.jpg", false, "background");
     // ResourceManager::LoadTexture("textures/awesomeface.png", true, "face");
-    // ResourceManager::LoadTexture("../images/awesomeface(2).png", true, "face"); // for .png
-    ResourceManager::LoadTexture("../images/awesomeface.jpeg", false, "face"); // for .jpeg
+    ResourceManager::LoadTexture("../images/awesomeface(2).png", true, "face"); // for .png
+    // ResourceManager::LoadTexture("../images/awesomeface.jpeg", false, "face"); // for .jpeg
     ResourceManager::LoadTexture("../images/paddle.png", true, "paddle");
     ResourceManager::LoadTexture("../images/block.png", false, "block");
     ResourceManager::LoadTexture("../images/block_solid.png", false, "block_solid");
