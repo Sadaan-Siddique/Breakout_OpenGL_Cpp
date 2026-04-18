@@ -32,8 +32,14 @@ void Game::Init()
     // configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->m_width),
                                       static_cast<float>(this->m_height), 0.0f, -1.0f, 1.0f);
+                                      
+    // Configure Sprite Shader
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
+    
+    // Configure Particle Shader (YOU WERE MISSING THIS!)
+    ResourceManager::GetShader("particle").Use().SetInteger("sprite", 0);
+    ResourceManager::GetShader("particle").SetMatrix4("projection", projection);
     // set render-specific controls
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
 
@@ -136,13 +142,13 @@ void Game::Render()
 void Game::ResetLevel()
 {
     if (this->Level == 0)
-        this->Levels[0].Load("levels/one.lvl", this->m_width, this->m_height / 2);
+        this->Levels[0].Load("../src/levels/one.lvl", this->m_width, this->m_height / 2);
     else if (this->Level == 1)
-        this->Levels[1].Load("levels/two.lvl", this->m_width, this->m_height / 2);
+        this->Levels[1].Load("../src/levels/two.lvl", this->m_width, this->m_height / 2);
     else if (this->Level == 2)
-        this->Levels[2].Load("levels/three.lvl", this->m_width, this->m_height / 2);
+        this->Levels[2].Load("../src/levels/three.lvl", this->m_width, this->m_height / 2);
     else if (this->Level == 3)
-        this->Levels[3].Load("levels/four.lvl", this->m_width, this->m_height / 2);
+        this->Levels[3].Load("../src/levels/four.lvl", this->m_width, this->m_height / 2);
 }
 
 void Game::ResetPlayer()
